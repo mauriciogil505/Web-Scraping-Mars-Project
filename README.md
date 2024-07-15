@@ -19,9 +19,9 @@ Output: Print the list of dictionaries to verify the scraped data.
 Code
 python
 Copy code
-################
+
 ### CODE BELOW:
-Comment # Import Splinter and BeautifulSoup
+# Import Splinter and BeautifulSoup
 from splinter import Browser
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -81,7 +81,7 @@ Export Data: Write the DataFrame to a CSV file.
 Code
 python
 Copy code
-##################
+
 ### CODE BELOW:
 Comment # Import libraries
 from splinter import Browser
