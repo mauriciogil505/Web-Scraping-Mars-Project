@@ -22,49 +22,49 @@ Copy code
 
 ### CODE BELOW:
 #Import Splinter and BeautifulSoup
-from splinter import Browser
-from bs4 import BeautifulSoup
-import pandas as pd
+    from splinter import Browser
+    from bs4 import BeautifulSoup
+    import pandas as pd
 
 #Set up Splinter
-browser = Browser('chrome')
+    browser = Browser('chrome')
 
-Visit the Mars news site
-url = 'https://redplanetscience.com/'
-browser.visit(url)
+#Visit the Mars news site
+    url = 'https://redplanetscience.com/'
+    browser.visit(url)
 
-Comment # Create a BeautifulSoup object
-html = browser.html
-soup = BeautifulSoup(html, 'html.parser')
+#Create a BeautifulSoup object
+    html = browser.html
+    soup = BeautifulSoup(html, 'html.parser')
 
-Comment # Extract all news article elements
-article_elements = soup.find_all('div', class_='content_title')
+#Extract all news article elements
+    article_elements = soup.find_all('div', class_='content_title')
 
-Comment # Create an empty list to store the dictionaries
-articles_list = []
+#Create an empty list to store the dictionaries
+    articles_list = []
 
-Comment # Loop through the text elements
-for article in article_elements:
-    # Extract the title and preview text from the elements
-    title = article.text
-    preview = article.find_next('div', class_='article_teaser_body').text
-    
-    # Create a dictionary for the article
-    article_dict = {
-        'title': title,
-        'preview': preview
-    }
-    
-    # Append the dictionary to the list
-    articles_list.append(article_dict)
+#Loop through the text elements
+    for article in article_elements:
+        #Extract the title and preview text from the elements
+        title = article.text
+        preview = article.find_next('div', class_='article_teaser_body').text
+        
+        #Create a dictionary for the article
+        article_dict = {
+            'title': title,
+            'preview': preview
+        }
+        
+        #Append the dictionary to the list
+        articles_list.append(article_dict)
 
-Comment # Close the browser
-browser.quit()
+#Close the browser
+    browser.quit()
 
-Comment # Output the list of dictionaries
-print(articles_list)
-Output
-The output is a list of dictionaries, each containing the title and preview text of a Mars news article.
+#Output the list of dictionaries
+    print(articles_list)
+    Output
+    The output is a list of dictionaries, each containing the title and preview text of a Mars news article.
 
 ### Part 2: Scrape and Analyze Mars Weather Data
 Objective
@@ -83,100 +83,100 @@ python
 Copy code
 
 ### CODE BELOW:
-Comment # Import libraries
-from splinter import Browser
-from bs4 import BeautifulSoup
-import pandas as pd
-import matplotlib.pyplot as plt
+#Import libraries
+    from splinter import Browser
+    from bs4 import BeautifulSoup
+    import pandas as pd
+    import matplotlib.pyplot as plt
 
-Comment # Set up Splinter
-browser = Browser('chrome')
+#Set up Splinter
+    browser = Browser('chrome')
 
-Comment # Visit the Mars Temperature Data Site
-url = 'https://static.bc-edx.com/data/web/mars_facts/temperature.html'
-browser.visit(url)
+#Visit the Mars Temperature Data Site
+    url = 'https://static.bc-edx.com/data/web/mars_facts/temperature.html'
+    browser.visit(url)
 
-Comment # Create a BeautifulSoup object
-html = browser.html
-soup = BeautifulSoup(html, 'html.parser')
+#Create a BeautifulSoup object
+    html = browser.html
+    soup = BeautifulSoup(html, 'html.parser')
 
-Comment # Find the table in the HTML
-table = soup.find('table', class_='table')
+#Find the table in the HTML
+    table = soup.find('table', class_='table')
 
-Comment # Extract all rows of data
-rows = []
-for tr in table.find_all('tr')[1:]:  # Skip the header row
-    tds = tr.find_all('td')
-    row = [td.text.strip() for td in tds]
-    rows.append(row)
+#Extract all rows of data
+    rows = []
+    for tr in table.find_all('tr')[1:]:  # Skip the header row
+        tds = tr.find_all('td')
+        row = [td.text.strip() for td in tds]
+        rows.append(row)
 
-Comment # Create a Pandas DataFrame
-columns = ['id', 'terrestrial_date', 'sol', 'ls', 'month', 'min_temp', 'pressure']
-mars_df = pd.DataFrame(rows, columns=columns)
+#Create a Pandas DataFrame
+    columns = ['id', 'terrestrial_date', 'sol', 'ls', 'month', 'min_temp', 'pressure']
+    mars_df = pd.DataFrame(rows, columns=columns)
+    
+#Examine data type of each column
+    print(mars_df.dtypes)
 
-Comment # Examine data type of each column
-print(mars_df.dtypes)
+#Change data types for data analysis
+    mars_df['id'] = mars_df['id'].astype(int)
+    mars_df['terrestrial_date'] = pd.to_datetime(mars_df['terrestrial_date'])
+    mars_df['sol'] = mars_df['sol'].astype(int)
+    mars_df['ls'] = mars_df['ls'].astype(float)
+    mars_df['month'] = mars_df['month'].astype(int)
+    mars_df['min_temp'] = mars_df['min_temp'].astype(float)
+    mars_df['pressure'] = mars_df['pressure'].astype(float)
 
-Comment # Change data types for data analysis
-mars_df['id'] = mars_df['id'].astype(int)
-mars_df['terrestrial_date'] = pd.to_datetime(mars_df['terrestrial_date'])
-mars_df['sol'] = mars_df['sol'].astype(int)
-mars_df['ls'] = mars_df['ls'].astype(float)
-mars_df['month'] = mars_df['month'].astype(int)
-mars_df['min_temp'] = mars_df['min_temp'].astype(float)
-mars_df['pressure'] = mars_df['pressure'].astype(float)
+#Confirm type changes were successful by examining data types again
+    print(mars_df.dtypes)
 
-Comment # Confirm type changes were successful by examining data types again
-print(mars_df.dtypes)
+#Analyze the data
+    #1. How many months are there on Mars?
+    num_months = mars_df['month'].nunique()
+    print(f"There are {num_months} months on Mars.")
 
-Comment # Analyze the data
-Comment # 1. How many months are there on Mars?
-num_months = mars_df['month'].nunique()
-print(f"There are {num_months} months on Mars.")
+    #2. How many Martian days' worth of data are there?
+    num_sols = mars_df['sol'].nunique()
+    print(f"There are {num_sols} Martian days' worth of data in the dataset.")
 
-Comment # 2. How many Martian days' worth of data are there?
-num_sols = mars_df['sol'].nunique()
-print(f"There are {num_sols} Martian days' worth of data in the dataset.")
+    #3. What is the average low temperature by month?
+    avg_min_temp_by_month = mars_df.groupby('month')['min_temp'].mean()
+    print(avg_min_temp_by_month)
 
-Comment # 3. What is the average low temperature by month?
-avg_min_temp_by_month = mars_df.groupby('month')['min_temp'].mean()
-print(avg_min_temp_by_month)
+#Plot the average temperature by month
+    avg_min_temp_by_month.plot(kind='bar', figsize=(10, 6))
+    plt.xlabel('Month')
+    plt.ylabel('Average Minimum Temperature (°C)')
+    plt.title('Average Minimum Temperature by Martian Month')
+    plt.show()
 
-Comment # Plot the average temperature by month
-avg_min_temp_by_month.plot(kind='bar', figsize=(10, 6))
-plt.xlabel('Month')
-plt.ylabel('Average Minimum Temperature (°C)')
-plt.title('Average Minimum Temperature by Martian Month')
-plt.show()
+#Identify the coldest and hottest months in Curiosity's location
+    coldest_month = avg_min_temp_by_month.idxmin()
+    hottest_month = avg_min_temp_by_month.idxmax()
+    print(f"The coldest month is {coldest_month} and the hottest month is {hottest_month}.")
 
-Comment # Identify the coldest and hottest months in Curiosity's location
-coldest_month = avg_min_temp_by_month.idxmin()
-hottest_month = avg_min_temp_by_month.idxmax()
-print(f"The coldest month is {coldest_month} and the hottest month is {hottest_month}.")
+    #4. Average pressure by Martian month
+    avg_pressure_by_month = mars_df.groupby('month')['pressure'].mean()
+    print(avg_pressure_by_month)
 
-Comment # 4. Average pressure by Martian month
-avg_pressure_by_month = mars_df.groupby('month')['pressure'].mean()
-print(avg_pressure_by_month)
+#Plot the average pressure by month
+    avg_pressure_by_month.plot(kind='bar', figsize=(10, 6), color='orange')
+    plt.xlabel('Month')
+    plt.ylabel('Average Atmospheric Pressure')
+    plt.title('Average Atmospheric Pressure by Martian Month')
+    plt.show()
 
-Comment # Plot the average pressure by month
-avg_pressure_by_month.plot(kind='bar', figsize=(10, 6), color='orange')
-plt.xlabel('Month')
-plt.ylabel('Average Atmospheric Pressure')
-plt.title('Average Atmospheric Pressure by Martian Month')
-plt.show()
+    #5. How many terrestrial (earth) days are there in a Martian year?
+    mars_df.plot(x='terrestrial_date', y='min_temp', figsize=(12, 6))
+    plt.xlabel('Terrestrial Date')
+    plt.ylabel('Minimum Temperature (°C)')
+    plt.title('Minimum Daily Temperature Over Time')
+    plt.show()
 
-Comment # 5. How many terrestrial (earth) days are there in a Martian year?
-mars_df.plot(x='terrestrial_date', y='min_temp', figsize=(12, 6))
-plt.xlabel('Terrestrial Date')
-plt.ylabel('Minimum Temperature (°C)')
-plt.title('Minimum Daily Temperature Over Time')
-plt.show()
-
-Comment # Write the data to a CSV
-mars_df.to_csv('mars_weather_data.csv', index=False)
-print("Data has been written to mars_weather_data.csv")
-Output
-The output includes various analyses and visualizations of the Mars weather data, as well as a CSV file containing the scraped data.
+#Write the data to a CSV
+    mars_df.to_csv('mars_weather_data.csv', index=False)
+    print("Data has been written to mars_weather_data.csv")
+    Output
+    The output includes various analyses and visualizations of the Mars weather data, as well as a CSV file containing the scraped data.
 
 ### Instructions
 To run the project, follow these steps:
