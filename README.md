@@ -21,15 +21,15 @@ python
 Copy code
 
 ### CODE BELOW:
-# Import Splinter and BeautifulSoup
+#Import Splinter and BeautifulSoup
 from splinter import Browser
 from bs4 import BeautifulSoup
 import pandas as pd
 
-Comment # Set up Splinter
+#Set up Splinter
 browser = Browser('chrome')
 
-Comment # Visit the Mars news site
+Visit the Mars news site
 url = 'https://redplanetscience.com/'
 browser.visit(url)
 
